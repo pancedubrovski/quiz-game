@@ -27,9 +27,10 @@ namespace quiz_game.Services
         public Room CreateRoom()
         {
            
-            string roomName = "room-" + DataManager.GetRooms().Count;
+            string roomName = "room-" + DataManager.NextId;
             Room room = new Room(roomName);
             DataManager.GetRooms().Add(room);
+            DataManager.NextId += 1;
             return room;
             
 
@@ -123,6 +124,13 @@ namespace quiz_game.Services
                 throw new Exception($"User {command.Username} dosn;t exist ");
             }
             room.Users.Remove(user);
+            if(room.Status == RoomStatus.full) {
+                room.Status = RoomStatus.active;
+            }else if(room.Users.Count < 1)
+            {
+                DataManager.RemoveRoom(room);
+            }
+
             await _userRepository.Logout(command);
          
 
@@ -143,7 +151,8 @@ namespace quiz_game.Services
                 {
                     Username = user.Username,
                     RoomName = room.Name,
-                    GameStatus = gameSatus.ToString()
+                    GameStatus = gameSatus.ToString(),
+                    BestScore = user.BestScore
                 };
             
 

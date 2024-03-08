@@ -6,6 +6,7 @@ namespace quiz_game.Models
     {
 
         private static List<Room> Rooms { get; set; } = new List<Room> { };
+        public static int NextId = 1;
         public static List<Room> GetRooms()
         {
             return Rooms;
@@ -29,6 +30,10 @@ namespace quiz_game.Models
                 question = new Question(room.Questions.Count() + 1,QuestionKind.Question);
             room.Questions.Add(question);
             return question;
+        }
+        public static bool RemoveRoom(Room room)
+        {
+           return Rooms.Remove(room);
         }
     }
 }
